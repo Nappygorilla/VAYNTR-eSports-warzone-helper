@@ -15,6 +15,7 @@
   const form = document.getElementById('setup-form');
   const result = document.getElementById('checklist-result');
   const storageKey = 'vayntr-performance-profile-v2';
+  let patchStatus = { status: 'reviewed', lastReviewed: '2026-10-14', detectedAt: null, message: 'Warzone baseline last reviewed October 14, 2026.' };
   const focusGuides = {
     'Consistency & control': ['Keep one setup for several sessions before judging it.', 'Change one setting at a time and note whether it actually helps.', 'Use the same short warm-up so your comparisons are fair.'],
     'Movement & responsiveness': ['Use a button layout and sensitivity you can control comfortably.', 'Turn off camera effects that make the picture harder for you to read.', 'Test changes in a low-pressure mode before keeping them.'],
@@ -88,7 +89,7 @@
     addText(result, 'p', profile.platform + ' · ' + profile.input + ' · ' + profile.focus, 'result-summary');
     const stamp = document.createElement('p');
     stamp.className = 'settings-stamp';
-    stamp.textContent = profile.game === 'Modern Warfare 4' ? 'PRE-RELEASE BASELINE · VERIFY AFTER LAUNCH' : 'BASELINE REVIEWED AGAINST OFFICIAL NOTES · 14 OCT 2026';
+    stamp.textContent = profile.game === 'Modern Warfare 4' ? 'PRE-RELEASE BASELINE · VERIFY AFTER LAUNCH' : (patchStatus.status === 'review-required' ? 'PATCH NOTES CHANGED · SETTINGS REVIEW REQUIRED' : 'BASELINE REVIEWED · ' + (patchStatus.lastReviewed || 'DATE NOT SET'));
     result.appendChild(stamp);
 
     const settingList = document.createElement('div');
@@ -187,6 +188,21 @@
   }
 
   const gameSelect = document.getElementById('game-select');
+  fetch('data/warzone-status.json', { cache: 'no-store' }).then(response => {
+    if (!response.ok) throw new Error('Patch status unavailable');
+    return response.json();
+  }).then(status => {
+    patchStatus = status;
+    const help = document.getElementById('game-status-help');
+    if (help && (!gameSelect || gameSelect.value === 'Warzone')) {
+      help.textContent = status.status === 'review-required'
+        ? 'Official patch notes changed on ' + (status.detectedAt || 'an unknown date') + '. The settings baseline is flagged for review; recommendations are not silently changed.'
+        : (status.message || 'Warzone baseline status loaded.');
+    }
+    const savedProfile = readProfile();
+    if (savedProfile && result && !result.hidden) renderProfile(savedProfile);
+  }).catch(() => {});
+
   gameSelect?.addEventListener('change', () => {
     const isMW4 = gameSelect.value === 'Modern Warfare 4';
     const help = document.getElementById('game-status-help');
