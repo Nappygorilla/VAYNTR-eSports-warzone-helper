@@ -7,15 +7,22 @@
   const messages = document.getElementById('support-messages');
   if (!launcher || !panel || !form || !input || !messages) return;
 
+  const departments = [
+    {id:'website-profile', name:'Website & Profile Support', keywords:['profile not showing','settings not showing','only checklist','checklist only','no settings','settings missing','profile broken','generate settings','not generating','profile builder','save','saved profile','saving profile','local storage','remember my profile','where is my profile'], description:'Profile builder, saved settings, and website features.'},
+    {id:'game-settings', name:'Game Settings & Updates', keywords:['warzone','mw4','modern warfare','patch notes','game update','updates','season','controller','mouse','keyboard','audio','sound','display','monitor','120hz','refresh rate','network','ping','internet','fov','field of view','settings'], description:'Game setup guidance, display/audio advice, and patch-status questions.'},
+    {id:'technical-support', name:'Technical Support', keywords:['site broken','not working','broken','white screen','blank','page error','bug','error','crash','loading','does not load','doesnt load','issue','problem'], description:'Website errors, broken features, and troubleshooting.'},
+    {id:'general-support', name:'General Support', keywords:['contact','support person','developer','human','talk to someone','feedback','paid api','api key','free','how do you work','is this real ai','real ai','ai model','artificial intelligence','question','help'], description:'General questions, feedback, and requests that do not fit another department.'}
+  ];
+
   const answers = [
-    {keys:['profile not showing','settings not showing','only checklist','checklist only','no settings','settings missing','profile broken','generate settings','not generating','profile builder'], answer:'<strong>Try this first:</strong>\n1. Open <a href="#performance">Build your settings profile</a>, choose your game/platform/input, then press <b>GENERATE MY SETTINGS</b>.\n2. Scroll down inside the form area—the settings sheet appears beneath the button.\n3. Hard-refresh the page (Ctrl + Shift + R on Chromebook/Windows) and try again.\n\nIf it still only shows a checklist, use <b>Report an issue</b> below and include your browser/device and what you clicked. I can’t see your screen from this chat.'},
-    {keys:['warzone update','updates','patch notes','auto update','automatically update','patch status','new season','season update'], answer:'The site can monitor the official Call of Duty patch-notes page and flag the profile for review. It does <b>not</b> safely rewrite settings automatically: patch notes can change without every recommendation becoming wrong, so recommendations need verification before they are changed. Check the status message above the game selector and open the official patch notes from your generated profile. If the status looks old, the GitHub Actions workflow may need to be enabled or checked.'},
-    {keys:['save','saved profile','saving profile','local storage','remember my profile','where is my profile'], answer:'Your settings profile is saved in this browser using local storage—there is no account or cloud sync. It should be available again on the same browser and device. Private/incognito sessions, clearing site data, or switching devices can remove or hide the saved profile.'},
-    {keys:['mw4','modern warfare 4','launch'], answer:'The MW4 option is intended as a pre-release starting checklist until the game and its actual menus can be verified. Don’t treat general display or comfort suggestions as confirmed MW4-specific settings. Check official game updates after launch before relying on any game-specific values.'},
-    {keys:['paid api','api key','free','how do you work','is this real ai','real ai','ai model','artificial intelligence'], answer:'This is a <b>no-paid-API support assistant</b>: it matches your message against VAYNTR help topics and responds from built-in guidance right in your browser. It does not send your messages to an AI provider, and it does not need an API key. To keep the site free and safe on GitHub Pages, it is a guided support bot rather than a full generative AI model.'},
-    {keys:['site broken','not working','broken','white screen','blank','page error','bug','report issue'], answer:'For a site problem, first hard-refresh with <b>Ctrl + Shift + R</b>. If the issue remains, open <a href="https://github.com/Nappygorilla/VAYNTR-eSports/issues" target="_blank" rel="noopener noreferrer">VAYNTR GitHub Issues ↗</a> and describe the steps that caused it, what you expected, what appeared instead, and your browser/device. Please don’t post passwords or private information.'},
-    {keys:['controller','mouse','keyboard','audio','sound','display','monitor','120hz','refresh rate','network','ping','internet','fov','field of view'], answer:'For setup questions, use the <a href="#performance">Performance Lab</a> to generate a platform-specific starting sheet. Confirm that each option exists in your current game version and change one setting at a time. For display smoothness, 120 Hz only works when the console/PC, display, and connection all support it; for network stability, Ethernet and pausing large downloads can help reduce local congestion.'},
-    {keys:['contact','support person','developer','human','talk to someone','feedback'], answer:'You can contact the project through <a href="https://github.com/Nappygorilla/VAYNTR-eSports/issues" target="_blank" rel="noopener noreferrer">GitHub Issues ↗</a>. Include the page section and steps to reproduce the issue. There is no live human-agent service connected to this chat yet.'}
+    {keys:['profile not showing','settings not showing','only checklist','checklist only','no settings','settings missing','profile broken','generate settings','not generating','profile builder'], answer:'<strong>Try this first:</strong>\n1. Open <a href="#performance">Build your settings profile</a>, choose your game/platform/input, then press <b>GENERATE MY SETTINGS</b>.\n2. Scroll down inside the form area—the settings sheet appears beneath the button.\n3. Hard-refresh the page (Ctrl + Shift + R on Chromebook/Windows) and try again.\n\nIf it still only shows a checklist, route this conversation to Website &amp; Profile Support using the department button below.'},
+    {keys:['warzone update','updates','patch notes','auto update','automatically update','patch status','new season','season update'], answer:'The site can monitor the official Call of Duty patch-notes page and flag the profile for review. It does <b>not</b> silently rewrite settings: recommendations need verification after a patch. Check the status message above the game selector and the official patch notes from your generated profile. If the status looks old, the GitHub Actions workflow may need to be checked.'},
+    {keys:['save','saved profile','saving profile','local storage','remember my profile','where is my profile'], answer:'Your profile is saved in this browser using local storage—there is no account or cloud sync. It should be available again on the same browser and device. Private/incognito sessions, clearing site data, or switching devices can remove or hide the saved profile.'},
+    {keys:['mw4','modern warfare 4','launch'], answer:'The MW4 option is intended as a general pre-release checklist until its actual menus and updates can be verified. Don’t treat general display or comfort suggestions as confirmed MW4-specific settings. Check official game updates after launch.'},
+    {keys:['paid api','api key','free','how do you work','is this real ai','real ai','ai model','artificial intelligence'], answer:'This support assistant is a <b>free, browser-based help bot</b>. It matches questions to built-in VAYNTR guidance and does not need a paid API key or send your messages to an AI provider. It is a guided support bot, not a full generative AI model.'},
+    {keys:['site broken','not working','broken','white screen','blank','page error','bug'], answer:'First try a hard refresh with <b>Ctrl + Shift + R</b>. If the issue remains, choose Technical Support below to open a prefilled issue with the steps and browser/device details you provide. Please do not include passwords or private information.'},
+    {keys:['controller','mouse','keyboard','audio','sound','display','monitor','120hz','refresh rate','network','ping','internet','fov','field of view'], answer:'For setup questions, use the <a href="#performance">Performance Lab</a> to generate a platform-specific starting sheet. Confirm each option exists in your current game version and change one setting at a time. 120 Hz only works when your platform, display, and connection all support it.'},
+    {keys:['contact','support person','developer','human','talk to someone','feedback'], answer:'Choose General Support below to send a question or feedback to the project’s support issue queue. This site does not currently have a live-agent inbox.'}
   ];
 
   function addMessage(text, who, allowHtml = false) {
@@ -48,13 +55,54 @@
       if (score > bestScore) { best = item; bestScore = score; }
     }
     if (best && bestScore >= 1) return best.answer;
-    return 'I don’t have a specific answer for that yet. Try asking about <b>settings profiles</b>, <b>Warzone updates</b>, <b>saving a profile</b>, <b>MW4</b>, or a <b>website issue</b>. You can also <a href="https://github.com/Nappygorilla/VAYNTR-eSports/issues" target="_blank" rel="noopener noreferrer">report it on GitHub ↗</a>.';
+    return 'I can answer common VAYNTR questions, or help route your request to the right department below. Try asking about settings profiles, game updates, saving a profile, or a website problem.';
   }
+
+  function detectDepartment(message) {
+    const query = normalize(message);
+    let best = departments[3];
+    let bestScore = 0;
+    for (const department of departments) {
+      let score = 0;
+      for (const keyword of department.keywords) {
+        const key = normalize(keyword);
+        if (query.includes(key)) score += key.includes(' ') ? 3 : 1;
+      }
+      if (score > bestScore) { best = department; bestScore = score; }
+    }
+    return best;
+  }
+
+  function addDepartmentRoute(message) {
+    const department = detectDepartment(message);
+    const card = document.createElement('div');
+    card.className = 'support-route';
+    const label = document.createElement('span');
+    label.className = 'support-route-kicker';
+    label.textContent = 'SUGGESTED DEPARTMENT';
+    const title = document.createElement('strong');
+    title.textContent = department.name;
+    const description = document.createElement('p');
+    description.textContent = department.description;
+    const route = document.createElement('a');
+    route.className = 'support-route-link';
+    route.textContent = 'CONTINUE TO ' + department.name.toUpperCase() + ' ↗';
+    const issueTitle = '[VAYNTR Support] ' + department.name;
+    const issueBody = 'Department: ' + department.name + '\\n\\nQuestion / issue:\\n' + message + '\\n\\nBrowser/device (optional):\\n\\nSteps tried (optional):\\n';
+    route.href = 'https://github.com/Nappygorilla/VAYNTR-eSports/issues/new?title=' + encodeURIComponent(issueTitle) + '&body=' + encodeURIComponent(issueBody);
+    route.target = '_blank';
+    route.rel = 'noopener noreferrer';
+    card.append(label, title, description, route);
+    messages.appendChild(card);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
   function send(message) {
     const trimmed = message.trim();
     if (!trimmed) return;
     addMessage(trimmed, 'user');
     addMessage(replyTo(trimmed), 'bot', true);
+    addDepartmentRoute(trimmed);
   }
   function setOpen(open) {
     panel.hidden = !open;
