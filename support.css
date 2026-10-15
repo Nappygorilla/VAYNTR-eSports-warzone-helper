@@ -34,3 +34,11 @@
 .support-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:480px){.support-launcher{right:14px;bottom:14px;min-height:52px}.support-panel{right:14px;bottom:76px;width:calc(100vw - 28px);height:min(620px,calc(100dvh - 96px));min-height:350px}.support-message{max-width:100%}}
 @media(prefers-reduced-motion:reduce){.support-launcher,.support-messages{transition:none;scroll-behavior:auto}}
+
+
+.support-route{margin:0 14px 14px;padding:13px;background:#101116;border:1px solid #e5253640;border-left:2px solid #e52536;display:flex;flex-direction:column;gap:6px}
+.support-route-kicker{font-size:8px;font-weight:900;letter-spacing:1.2px;color:#ef6976}
+.support-route strong{font-size:11px;letter-spacing:.2px;color:#fff}
+.support-route p{margin:0;color:#aaaab3;font-size:10px;line-height:1.6}
+.support-route-link{display:block;margin-top:4px;padding:10px 11px;background:#e52536;border:1px solid #e52536;color:#fff!important;text-decoration:none!important;text-align:center;font-size:9px;font-weight:900;letter-spacing:.7px}
+.support-route-link:hover{background:#f13545}
