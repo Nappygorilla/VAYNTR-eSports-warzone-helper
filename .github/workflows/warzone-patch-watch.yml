@@ -62,6 +62,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/warzone-patch-page.sha256
+          git add .github/warzone-patch-page.sha256 data/warzone-status.json
           git commit -m "Track official Warzone patch notes fingerprint"
           git push
