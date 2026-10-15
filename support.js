@@ -7,6 +7,10 @@
   const messages = document.getElementById('support-messages');
   if (!launcher || !panel || !form || !input || !messages) return;
 
+  // Set this to your deployed Cloudflare Worker URL after configuring the server-side Gemini secret.
+  // Never put the Gemini API key in this file.
+  const AI_API_ENDPOINT = '';
+
   const departments = [
     {id:'website-profile', name:'Website & Profile Support', keywords:['profile not showing','settings not showing','only checklist','checklist only','no settings','settings missing','profile broken','generate settings','not generating','profile builder','save','saved profile','saving profile','local storage','remember my profile','where is my profile'], description:'Profile builder, saved settings, and website features.'},
     {id:'game-settings', name:'Game Settings & Updates', keywords:['warzone','mw4','modern warfare','patch notes','game update','updates','season','controller','mouse','keyboard','audio','sound','display','monitor','120hz','refresh rate','network','ping','internet','fov','field of view','settings'], description:'Game setup guidance, display/audio advice, and patch-status questions.'},
@@ -107,11 +111,35 @@
     messages.scrollTop = messages.scrollHeight;
   }
 
-  function send(message) {
+  async function send(message) {
     const trimmed = message.trim();
     if (!trimmed) return;
     addMessage(trimmed, 'user');
-    addMessage(replyTo(trimmed), 'bot', true);
+    let answered = false;
+    if (AI_API_ENDPOINT) {
+      try {
+        const response = await fetch(AI_API_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: trimmed })
+        });
+        const data = await response.json();
+        if (!response.ok || typeof data.answer !== 'string' || !data.answer.trim()) {
+          throw new Error(data.error || 'AI reply unavailable');
+        }
+        // Render model output as text, never as HTML.
+        addMessage(data.answer.trim(), 'bot');
+        answered = true;
+      } catch (error) {
+        console.warn('VAYNTR AI support unavailable; using built-in reply.', error);
+      }
+    }
+    if (!answered) {
+      const fallback = replyTo(trimmed);
+      addMessage(AI_API_ENDPOINT
+        ? 'The AI assistant is temporarily unavailable, so here is the built-in help instead.\\n\\n' + fallback
+        : fallback, 'bot', true);
+    }
     addDepartmentRoute(trimmed);
   }
   function setOpen(open) {
