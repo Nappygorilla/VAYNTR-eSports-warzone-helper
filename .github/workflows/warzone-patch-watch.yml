@@ -1,0 +1,67 @@
+name: Warzone patch notes watcher
+
+on:
+  schedule:
+    - cron: "17 14 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  check-official-patch-notes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Compare official Warzone patch-notes page
+        id: patchcheck
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://www.callofduty.com/patchnotes/2026/09/call-of-duty-bo7-warzone-season-06-patch-notes"
+          curl --fail --location --silent --show-error "$URL" -o /tmp/warzone-patch-notes.html
+          CURRENT="$(sha256sum /tmp/warzone-patch-notes.html | cut -d ' ' -f 1)"
+          FILE=".github/warzone-patch-page.sha256"
+          PREVIOUS="$(cat "$FILE" 2>/dev/null || echo INITIAL_BASELINE)"
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+          if [ "$PREVIOUS" = "INITIAL_BASELINE" ]; then
+            echo "$CURRENT" > "$FILE"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Initialized patch-notes page fingerprint."
+          elif [ "$CURRENT" != "$PREVIOUS" ]; then
+            echo "$CURRENT" > "$FILE"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Official Warzone patch-notes page changed."
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No official page change detected."
+          fi
+
+      - name: Create a settings review issue when notes change
+        if: steps.patchcheck.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PATCH_URL: ${{ steps.patchcheck.outputs.url }}
+          PATCH_HASH: ${{ steps.patchcheck.outputs.current }}
+        run: |
+          gh issue create \
+            --title "Review VAYNTR Warzone settings after official patch-notes update" \
+            --body "The official Warzone Season 06 patch-notes page changed. Review whether any recommended settings or platform notes need updating before editing the profile library. Do not assume a patch requires sensitivity/display changes without evidence.\n\nOfficial notes: $PATCH_URL\n\nPage fingerprint: $PATCH_HASH"
+
+      - name: Commit updated page fingerprint
+        if: steps.patchcheck.outputs.changed == 'true' || steps.patchcheck.outputs.changed == 'false'
+        shell: bash
+        run: |
+          if git diff --quiet -- .github/warzone-patch-page.sha256; then
+            echo "Fingerprint file unchanged."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/warzone-patch-page.sha256
+          git commit -m "Track official Warzone patch notes fingerprint"
+          git push
