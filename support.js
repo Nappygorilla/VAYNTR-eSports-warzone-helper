@@ -9,7 +9,7 @@
 
   // Set this to your deployed Cloudflare Worker URL after configuring the server-side Gemini secret.
   // Never put the Gemini API key in this file.
-  const AI_API_ENDPOINT = '';
+  const AI_API_ENDPOINT = 'https://vayntr-chatbot.hidenvr.workers.dev/';
 
   const departments = [
     {id:'website-profile', name:'Website & Profile Support', keywords:['profile not showing','settings not showing','only checklist','checklist only','no settings','settings missing','profile broken','generate settings','not generating','profile builder','save','saved profile','saving profile','local storage','remember my profile','where is my profile'], description:'Profile builder, saved settings, and website features.'},
