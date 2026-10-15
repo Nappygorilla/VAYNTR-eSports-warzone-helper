@@ -43,8 +43,15 @@
   function normalize(text) {
     return text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
   }
+  function isEsportsRecruitmentIntent(query) {
+    const esportsMention = /\b(esports|e sports|vayntr|roster|tryouts?|recruitment|competitive team)\b/.test(query);
+    const joinIntent = /\b(join|apply|application|tryouts?|recruit|recruitment|play for|become|team|roster|sign up)\b/.test(query);
+    return (esportsMention && joinIntent) || /\b(join|apply|tryouts?|recruitment)\b.*\b(team|roster|vayntr)\b/.test(query);
+  }
+
   function replyTo(message) {
     const query = normalize(message);
+    if (isEsportsRecruitmentIntent(query)) return 'Want to compete with VAYNTR? Choose <b>Esports Team Recruitment</b> below to submit your interest. Include your main game, platform, region/time zone, role, and competitive experience if you have any. Never include your password or other private account information. This opens a recruitment request on GitHub; it is not an automatic tryout or confirmation of a roster spot.';
     let best = null;
     let bestScore = 0;
     for (const item of answers) {
@@ -62,6 +69,7 @@
 
   function detectDepartment(message) {
     const query = normalize(message);
+    if (isEsportsRecruitmentIntent(query)) return departments.find(department => department.id === 'esports-recruitment');
     let best = departments[3];
     let bestScore = 0;
     for (const department of departments) {
