@@ -32,7 +32,7 @@
         <div class="eyebrow"><span class="pulse-dot"></span> COMPETITIVE PERFORMANCE PLATFORM</div>
         <h1>BUILT TO<br><span>COMPETE.</span></h1>
         <p class="hero-lede">Your game. Your setup. Your next level.</p>
-        <p class="hero-description">A home for competitive players: practical settings tools, focused training, and the VAYNTR esports identity — built for console and PC.</p>
+        <p class="hero-description">A home for competitive players: game settings profiles, update-aware setup guidance, focused training, and the VAYNTR esports identity — built for console and PC.</p>
         <div class="hero-actions"><a class="button button-primary" href="#performance">OPTIMIZE YOUR SETUP <span>↗</span></a><a class="button button-quiet" href="#platform">EXPLORE VAYNTR <span>↓</span></a></div>
         <div class="hero-proof"><div class="proof-icon">V</div><div><strong>PLAY WITH PURPOSE</strong><small>Measure. Adjust. Improve.</small></div><span class="proof-line"></span><span class="proof-label">EST. 2026</span></div>
       </div>
@@ -59,16 +59,16 @@
 
     <section class="lab-section" id="performance">
       <div class="section-wrap lab-layout">
-        <div class="lab-intro"><div class="eyebrow"><span class="pulse-dot"></span> 02 / PERFORMANCE LAB</div><h2>YOUR SETUP.<br><span>YOUR ADVANTAGE.</span></h2><p>Start with your platform and playstyle. Build a personal checklist, save it locally, and make changes one at a time so you know what actually helps.</p>
+        <div class="lab-intro"><div class="eyebrow"><span class="pulse-dot"></span> 02 / PERFORMANCE LAB</div><h2>YOUR SETUP.<br><span>YOUR ADVANTAGE.</span></h2><p>Choose your game, platform, and input to get a practical settings sheet you can apply in-game. Save it locally, then test changes one at a time.</p>
           <div class="lab-note"><span class="note-icon">i</span><p><strong>NO MAGIC SETTINGS.</strong><br>Recommendations are starting points, not guarantees. Comfort, consistency, and your own testing matter most.</p></div>
         </div>
         <form class="setup-panel" id="setup-form">
-          <div class="panel-header"><div><span class="panel-kicker">SETUP CONFIGURATOR</span><h3>Build your profile</h3></div><span class="live-label"><span></span> LOCAL PROFILE</span></div>
-          <label class="field-label" for="platform-select">YOUR PLATFORM</label><div class="platform-options"><label class="platform-option"><input type="radio" name="platform" value="PlayStation 5" checked><span>PS5</span></label><label class="platform-option"><input type="radio" name="platform" value="Xbox"><span>XBOX</span></label><label class="platform-option"><input type="radio" name="platform" value="PC"><span>PC</span></label></div>
+          <div class="panel-header"><div><span class="panel-kicker">SETUP CONFIGURATOR</span><h3>Build your settings profile</h3></div><span class="live-label"><span></span> LOCAL PROFILE</span></div>
+          <label class="field-label" for="game-select">GAME</label><select id="game-select" name="game"><option value="Warzone">Call of Duty: Warzone</option><option value="Modern Warfare 4">Modern Warfare 4 (launching Oct 23)</option></select><p class="game-status-help" id="game-status-help">Warzone settings baseline reviewed against official patch notes dated October 14, 2026.</p>\n          <label class="field-label" for="platform-select">YOUR PLATFORM</label><div class="platform-options"><label class="platform-option"><input type="radio" name="platform" value="PlayStation 5" checked><span>PS5</span></label><label class="platform-option"><input type="radio" name="platform" value="Xbox"><span>XBOX</span></label><label class="platform-option"><input type="radio" name="platform" value="PC"><span>PC</span></label></div>
           <label class="field-label" for="input-style">INPUT METHOD</label><select id="input-style" name="input"><option>Controller</option><option>Mouse &amp; Keyboard</option></select>
           <label class="field-label" for="focus-select">YOUR MAIN FOCUS</label><select id="focus-select" name="focus"><option>Consistency &amp; control</option><option>Movement &amp; responsiveness</option><option>Audio clarity</option><option>Display smoothness</option><option>Network stability</option></select>
           <label class="field-label" for="notes">NOTES FOR YOUR NEXT SESSION <span>OPTIONAL</span></label><textarea id="notes" name="notes" rows="2" placeholder="e.g. check display refresh rate, compare two sensitivity values…"></textarea>
-          <button class="button button-primary panel-submit" type="submit">GENERATE MY CHECKLIST <span>↗</span></button>
+          <button class="button button-primary panel-submit" type="submit">GENERATE MY SETTINGS <span>↗</span></button>
           <div class="privacy-note"><span>⌁</span> Your profile stays in this browser. No account required.</div>
           <div class="checklist-result" id="checklist-result" aria-live="polite" hidden></div>
         </form>
