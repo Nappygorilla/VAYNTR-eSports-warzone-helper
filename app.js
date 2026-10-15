@@ -34,7 +34,7 @@
         ['GAME STATUS', 'MW4 is scheduled for October 23, 2026. This is a pre-release checklist, not a claim that MW4 menu values have been verified.'],
         ['DISPLAY', 'Use your display’s highest supported refresh rate; enable 120 Hz only if your platform, display, and connection support it.'],
         ['VISUAL CLARITY', 'If the options exist, start with motion blur Off and film grain 0, then adjust for comfort.'],
-        ['INPUT', isMouse ? 'Keep your current mouse DPI and in-game sensitivity for the first test; change one value at a time.' : 'Start with a comfortable controller sensitivity and adjust gradually; do not copy Warzone values blindly.'],
+        ['INPUT COMFORT', isMouse ? 'Use a comfortable mouse grip and keyboard layout; confirm keybinds are easy to reach and do not cause discomfort.' : 'Choose a controller layout and button mapping that feel comfortable and accessible; confirm the options in the game menu.'],
         ['UPDATE CHECK', 'After launch and each title update, check the official MW4 patch notes before treating these as game-specific recommendations.']
       );
       return settings;
@@ -48,15 +48,11 @@
     );
     if (isMouse) {
       settings.push(
-        ['MOUSE INPUT', 'Use Raw Input if the option exists. Keep one DPI value and tune in-game sensitivity gradually; there is no universal best number.'],
-        ['AIM / INPUT FEEL', 'Disable mouse acceleration in the game if available; keep desktop settings consistent while testing.']
+        ['MOUSE & KEYBOARD COMFORT', 'Use a comfortable grip, a stable surface, and keybinds that are easy to reach. Keep accessibility options consistent while testing.']
       );
     } else {
       settings.push(
-        ['HORIZONTAL / VERTICAL SENSITIVITY', 'Starting point: 1.70 horizontal / 1.60 vertical. If your game version uses a different scale, use the closest equivalent and confirm in the menu.'],
-        ['ADS SENSITIVITY MULTIPLIER', 'Starting point: 0.85. Adjust in small steps until tracking feels controlled.'],
-        ['AIM RESPONSE CURVE', 'Try Dynamic as a starting point; Standard or Linear may suit you better. Choose one and practice before switching again.'],
-        ['DEADZONES', 'Set each stick’s minimum deadzone just above unwanted drift, then use the highest maximum response your control feels comfortable with.']
+        ['CONTROLLER COMFORT', 'Choose a button layout that is comfortable and accessible for your hands. Check accessibility and vibration options in the game menu.']
       );
     }
     settings.push(
@@ -208,6 +204,6 @@
     const help = document.getElementById('game-status-help');
     if (help) help.textContent = isMW4
       ? 'MW4 launches October 23, 2026. Until launch, this profile is a clearly labelled general setup baseline—not verified MW4 menu values.'
-      : 'Warzone settings baseline reviewed against official patch notes dated October 14, 2026.';
+      : (patchStatus.status === 'review-required' ? 'Official patch notes changed on ' + (patchStatus.detectedAt || 'an unknown date') + '. Settings need review; recommendations are not silently changed.' : (patchStatus.message || 'Warzone baseline status loaded.'));
   });
 })();
