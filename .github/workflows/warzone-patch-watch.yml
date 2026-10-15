@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          URL="https://www.callofduty.com/patchnotes/2026/09/call-of-duty-bo7-warzone-season-06-patch-notes"
+          URL="https://www.callofduty.com/patchnotes"
           curl --fail --location --silent --show-error "$URL" -o /tmp/warzone-patch-notes.html
           CURRENT="$(sha256sum /tmp/warzone-patch-notes.html | cut -d ' ' -f 1)"
           FILE=".github/warzone-patch-page.sha256"
@@ -50,7 +50,7 @@ jobs:
         run: |
           gh issue create \
             --title "Review VAYNTR Warzone settings after official patch-notes update" \
-            --body "The official Warzone Season 06 patch-notes page changed. Review whether any recommended settings or platform notes need updating before editing the profile library. Do not assume a patch requires sensitivity/display changes without evidence.\n\nOfficial notes: $PATCH_URL\n\nPage fingerprint: $PATCH_HASH"
+            --body "The official Call of Duty patch-notes index changed. Review the latest Warzone entry and determine whether VAYNTR settings need a verified update. Review whether any recommended settings or platform notes need updating before editing the profile library. Do not assume a patch requires sensitivity/display changes without evidence.\n\nOfficial notes: $PATCH_URL\n\nPage fingerprint: $PATCH_HASH"
 
       - name: Commit updated page fingerprint
         if: steps.patchcheck.outputs.changed == 'true' || steps.patchcheck.outputs.changed == 'false'
