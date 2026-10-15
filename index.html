@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=20261015-settings2">
+  <link rel="stylesheet" href="support.css?v=20261015-1">
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
@@ -91,6 +92,33 @@
   </main>
 
   <footer class="site-footer"><a class="brand footer-brand" href="#home"><span class="brand-mark"><svg viewBox="0 0 48 48"><path d="M8 7h13l3 7 3-7h13L24 42 8 7Z" fill="none" stroke="currentColor" stroke-width="4"/><path d="M18 18l6 14 6-14" fill="none" stroke="currentColor" stroke-width="3"/></svg></span><span class="brand-name">VAYNTR<span>.</span></span></a><p>BUILT TO COMPETE. DESIGNED TO IMPROVE.</p><span class="footer-copy">© 2026 VAYNTR. INDEPENDENT ESPORTS PROJECT.</span><a class="back-top" href="#home">BACK TO TOP ↑</a></footer>
+
+  <button class="support-launcher" id="support-launcher" type="button" aria-label="Open VAYNTR support chat" aria-controls="support-panel" aria-expanded="false">
+    <span class="support-launcher-icon" aria-hidden="true">V</span><span>SUPPORT</span><span class="support-launcher-dot" aria-hidden="true"></span>
+  </button>
+  <section class="support-panel" id="support-panel" aria-label="VAYNTR support assistant" hidden>
+    <header class="support-header">
+      <div class="support-avatar" aria-hidden="true">V</div>
+      <div class="support-heading"><strong>VAYNTR SUPPORT</strong><span><i></i> Instant help · No API key</span></div>
+      <button class="support-close" id="support-close" type="button" aria-label="Close support chat">×</button>
+    </header>
+    <div class="support-notice">Support assistant · Answers run in your browser. No account or paid AI API required.</div>
+    <div class="support-messages" id="support-messages" role="log" aria-live="polite" aria-relevant="additions text">
+      <div class="support-message support-bot"><span class="support-message-label">VAYNTR ASSISTANT</span><p>Hey! I can help with your settings profile, update status, saving profiles, or site issues. What do you need help with?</p></div>
+    </div>
+    <div class="support-quick-actions" aria-label="Common support questions">
+      <button type="button" data-support-question="My settings profile is not showing">Profile not showing</button>
+      <button type="button" data-support-question="How do Warzone updates work?">Warzone updates</button>
+      <button type="button" data-support-question="How do I save my profile?">Saving profiles</button>
+    </div>
+    <form class="support-form" id="support-form">
+      <label class="support-sr-only" for="support-input">Ask VAYNTR support</label>
+      <input id="support-input" name="message" type="text" maxlength="500" autocomplete="off" placeholder="Ask a support question…" required>
+      <button type="submit" aria-label="Send message">↑</button>
+    </form>
+    <footer class="support-footer"><span>NO PAID API · NO CHAT ACCOUNT</span><a href="https://github.com/Nappygorilla/VAYNTR-eSports/issues" target="_blank" rel="noopener noreferrer">Report an issue ↗</a></footer>
+  </section>
   <script src="app.js?v=20261015-settings2"></script>
+  <script src="support.js?v=20261015-1"></script>
 </body>
 </html>
