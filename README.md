@@ -9,7 +9,7 @@ VAYNTR is an esports identity and a practical performance platform for PlayStati
 - Premium, responsive black/white design with restrained crimson accents.
 - Custom VAYNTR angular emblem built as inline SVG.
 - Platform overview for console and PC.
-- Interactive Performance Lab: choose platform, input method, and focus to generate a personal checklist.
+- Interactive Performance Lab: choose Warzone or MW4, platform, input method, and focus to generate a settings sheet with copy/save support. MW4 pre-release values are explicitly labelled as unverified.
 - Profile is saved locally in the visitor's browser; no account or backend is required.
 - Training routines for warm-up, awareness, replay review, and session reflection.
 - Mobile navigation, keyboard focus states, and reduced-motion support.
@@ -24,11 +24,11 @@ In the repository, open **Settings → Pages**, choose **Deploy from a branch**,
 
 ## Project status
 
-This is the first frontend foundation. No player roster, tournament record, official contact inbox, live game data, or verified performance statistics are claimed. Add those only when real information and sources are available. The current contact address shown on the page is explicitly marked as a placeholder and must be replaced before launch.
+This is the first frontend foundation. No player roster, tournament record, official contact inbox, live game data, or verified performance statistics are claimed. Add those only when real information and sources are available. The site currently has no live backend, accounts, or verified player roster.
 
 ## Roadmap
 
-- Add a verified, dated game update and patch-notes area.
+- Scheduled Warzone patch-note watcher: detect changes to the official patch-notes page and open a review issue; settings are not silently changed without verification.\n- Keep MW4 pre-release guidance separate until settings can be checked against the released game.
 - Add platform-specific setup guides with clear source/date labels.
 - Add real team/player profiles and event results when confirmed.
 - Consider account sync only after a secure backend is available.
