@@ -16,14 +16,14 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Compare official Warzone patch-notes page
+      - name: Detect changes to official Call of Duty patch notes
         id: patchcheck
         shell: bash
         run: |
           set -euo pipefail
           URL="https://www.callofduty.com/patchnotes"
-          curl --fail --location --silent --show-error "$URL" -o /tmp/warzone-patch-notes.html
-          CURRENT="$(sha256sum /tmp/warzone-patch-notes.html | cut -d ' ' -f 1)"
+          curl --fail --location --silent --show-error "$URL" -o /tmp/cod-patch-notes.html
+          CURRENT="$(sha256sum /tmp/cod-patch-notes.html | cut -d ' ' -f 1)"
           FILE=".github/warzone-patch-page.sha256"
           PREVIOUS="$(cat "$FILE" 2>/dev/null || echo INITIAL_BASELINE)"
           echo "url=$URL" >> "$GITHUB_OUTPUT"
@@ -31,17 +31,30 @@ jobs:
           if [ "$PREVIOUS" = "INITIAL_BASELINE" ]; then
             echo "$CURRENT" > "$FILE"
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Initialized patch-notes page fingerprint."
+            echo "Initialized official patch-notes fingerprint."
           elif [ "$CURRENT" != "$PREVIOUS" ]; then
             echo "$CURRENT" > "$FILE"
+            python - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          path = "data/warzone-status.json"
+          with open(path, encoding="utf-8") as f:
+              data = json.load(f)
+          data["status"] = "review-required"
+          data["detectedAt"] = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+          data["message"] = "The official Call of Duty patch-notes index changed. Review the latest Warzone notes before treating this settings baseline as current."
+          with open(path, "w", encoding="utf-8") as f:
+              json.dump(data, f, indent=2)
+              f.write("\\n")
+          PY
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "Official Warzone patch-notes page changed."
+            echo "Official patch-notes index changed."
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No official page change detected."
           fi
 
-      - name: Create a settings review issue when notes change
+      - name: Open review issue when official notes change
         if: steps.patchcheck.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -49,19 +62,19 @@ jobs:
           PATCH_HASH: ${{ steps.patchcheck.outputs.current }}
         run: |
           gh issue create \
-            --title "Review VAYNTR Warzone settings after official patch-notes update" \
-            --body "The official Call of Duty patch-notes index changed. Review the latest Warzone entry and determine whether VAYNTR settings need a verified update. Review whether any recommended settings or platform notes need updating before editing the profile library. Do not assume a patch requires sensitivity/display changes without evidence.\n\nOfficial notes: $PATCH_URL\n\nPage fingerprint: $PATCH_HASH"
+            --title "Review VAYNTR Warzone settings after official update" \
+            --body "The official Call of Duty patch-notes index changed. Review the latest Warzone notes and verify whether general display, input, audio, or network recommendations need changes. Do not change settings merely because the page changed.\n\nOfficial notes: $PATCH_URL\n\nPage fingerprint: $PATCH_HASH"
 
-      - name: Commit updated page fingerprint
+      - name: Commit changed patch status
         if: steps.patchcheck.outputs.changed == 'true' || steps.patchcheck.outputs.changed == 'false'
         shell: bash
         run: |
-          if git diff --quiet -- .github/warzone-patch-page.sha256; then
-            echo "Fingerprint file unchanged."
+          if git diff --quiet -- .github/warzone-patch-page.sha256 data/warzone-status.json; then
+            echo "Patch status files unchanged."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .github/warzone-patch-page.sha256 data/warzone-status.json
-          git commit -m "Track official Warzone patch notes fingerprint"
+          git commit -m "Track official patch notes status"
           git push
